@@ -247,7 +247,14 @@ def x86_refers(assistant, ins):
             regidx = operand.value.reg
             regvalue = assistant.regs(ins, regidx)
             regname = pwndbg.disasm.x86.regs[regidx].split('_')[-1].lower()
-            output.append("$ %s : %s" % (regname, pwndbg.chain.format(regvalue)))
+            if regvalue:
+                chain = pwndbg.chain.format(regvalue)
+                if chain:
+                    output.append("$ %s : %s" % (regname, chain))
+                else:
+                    pass
+            else:
+                pass
         elif operand.type == x86_const.X86_OP_IMM:
             pass
         elif operand.type == x86_const.X86_OP_MEM:
@@ -259,7 +266,14 @@ def x86_refers(assistant, ins):
             # 4. base_reg+index_reg+disp： relative based indexed addressing mode
             memvalue = assistant.memory(ins, operand)
             memory_sz = assistant.memory_sz(ins, operand)
-            output.append('@ %s : %s' % (memory_sz, pwndbg.chain.format(memvalue)))
+            if memvalue:
+                chain = pwndbg.chain.format(memvalue)
+                if chain:
+                    output.append('@ %s : %s' % (memory_sz, chain))
+                else:
+                    pass
+            else:
+                pass
 
     return output
     # asm = '%-06s %s' % (ins.mnemonic, ins.op_str)
